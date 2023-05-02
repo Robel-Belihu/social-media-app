@@ -22,21 +22,31 @@ export function Chatroom({ room }) {
   };
 
   return (
-    <div className="">
-      <form onSubmit={handleSubmit} className="form flex flex-col w-3/5 m-6">
-        <input
-          type="text"
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          placeholder="type you message"
-          onChange={(e) => setNewMessage(e.target.value)}
-          value={newMessage}
-        />
-        <button
-          type="submit"
-          className="bg-orange-600 hover:bg-orange-400 text-white font-bold py-2 px-5 mt-3 rounded focus:outline-none focus:shadow-outline"
-        >
-          Send
-        </button>
+    <div class=" bg-blue-200">
+      <form
+        onSubmit={handleSubmit}
+        className="container h-screen flex justify-center items-start"
+      >
+        <div className="relative">
+          <div className="absolute top-4 left-3">
+            <i className="fa fa-search text-gray-400 z-20 hover:text-gray-500"></i>
+          </div>
+          <input
+            type="text"
+            className="h-14 w-96 pl-10 pr-20 mt-4 rounded-lg z-0 focus:shadow focus:outline-none"
+            placeholder="Type a text ..."
+            onChange={(e) => setNewMessage(e.target.value)}
+            value={newMessage}
+          />
+          <div className="absolute top-2 right-2">
+            <button
+              type="submit"
+              className="h-10 w-20 text-white rounded-lg bg-red-500 hover:bg-red-600"
+            >
+              Search
+            </button>
+          </div>
+        </div>
       </form>
     </div>
   );

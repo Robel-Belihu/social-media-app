@@ -3,6 +3,8 @@ import "./App.css";
 import { AuthPage } from "./components/AuthPage";
 import Cookies from "universal-cookie/cjs/Cookies";
 import { Chatroom } from "./components/Chatroom";
+import { signOut } from "firebase/auth";
+import { auth } from "./firebase.config";
 
 const cookies = new Cookies();
 
@@ -10,6 +12,13 @@ function App() {
   const [isAuth, setIsAuth] = useState(cookies.get("auth-token"));
   const [room, setRoom] = useState(null);
   const [isInside, setIsInside] = useState(false);
+
+  const signUserOut = async () => {
+    await signOut(auth);
+    cookies.remove("auth-token");
+    setIsAuth(false);
+    setRoom(null);
+  };
 
   const roomInputRef = useRef(null);
 
@@ -24,10 +33,10 @@ function App() {
     <div>
       {room ? (
         <div>
-          <Chatroom room={room} />
+          <Chatroom signOut={signUserOut} room={room} />
         </div>
       ) : (
-        <div className="min-h-screen bg-orange-600 py-6 flex flex-col justify-center sm:py-12">
+        <div className="min-h-screen bg-orange-500 py-6 flex flex-col justify-center sm:py-12">
           <div className="relative py-3 sm:max-w-xl sm:mx-auto">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
             <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
@@ -63,6 +72,9 @@ function App() {
                       Enter Chatroom
                     </button>
                   </div>
+                </div>
+                <div onClick={signUserOut}>
+                  <button className="btn sm:m-4 m-0">Signout</button>
                 </div>
               </div>
             </div>

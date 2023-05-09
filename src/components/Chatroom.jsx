@@ -6,17 +6,22 @@ import {
   query,
   serverTimestamp,
   where,
+  orderBy,
 } from "firebase/firestore";
 import { auth, db } from "../firebase.config";
 import "../index.css";
 
-export function Chatroom({ room }) {
+export function Chatroom({ room, signUserOut }) {
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const messagesRef = collection(db, "messages");
 
   useEffect(() => {
-    const queryMsg = query(messagesRef, where("room", "==", room));
+    const queryMsg = query(
+      messagesRef,
+      where("room", "==", room),
+      orderBy("sentAt")
+    );
     const unsubscribe = onSnapshot(queryMsg, (snapshot) => {
       let texts = [];
       snapshot.forEach((snap) => {
@@ -42,30 +47,21 @@ export function Chatroom({ room }) {
   };
 
   return (
-    <div className="h-screen bg-hero bg-cover bg-no-repeat">
+    <div className="h-screen bg-orange-500">
       <form
         onSubmit={handleSubmit}
-        className="flex-1 p:2 sm:p-6 justify-between flex flex-col h-screen"
+        className=" flex-1 p:2 sm:p-6 justify-between flex flex-col h-screen"
       >
         <div className="flex sm:items-center justify-center py-3 border-b-2 border-gray-200">
           <div className="relative flex items-center space-x-4">
-            <div className="relative">
-              <span className="absolute text-green-500 right-0 bottom-0">
-                <svg width="20" height="20">
-                  <circle cx="8" cy="8" r="8" fill="currentColor"></circle>
-                </svg>
-              </span>
-              <img
-                src="https://images.unsplash.com/photo-1549078642-b2ba4bda0cdb?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144"
-                alt=""
-                className="w-10 sm:w-16 h-10 sm:h-16 rounded-full"
-              />
-            </div>
             <div className="flex flex-col leading-tight">
               <div className="text-2xl mt-1 flex items-center">
                 <span className="text-gray-700 mr-3">
                   Welcome to chatroom{" "}
                   <span className="font-black text-purple-800">{room}</span>
+                </span>
+                <span className="text-white sm:text-l text-xl">
+                  Reload to change Chatroom
                 </span>
               </div>
             </div>
@@ -74,13 +70,13 @@ export function Chatroom({ room }) {
         </div>
         <div
           id="messages"
-          className="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
+          className="bg-gray-400 flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
         >
           <div className="chat-message">
             <div className="flex items-end">
               <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
                 {messages.map((message) => (
-                  <span className="px-4 py-2 rounded-lg text-sm inline-block rounded-bl-none bg-gray-300 text-black">
+                  <span className="px-6 py-4 rounded-lg text-sm inline-block rounded-bl-none bg-gray-300 text-black">
                     <span className="font-semibold text-base text-purple-600">
                       {message.user}
                     </span>
@@ -88,28 +84,6 @@ export function Chatroom({ room }) {
                   </span>
                 ))}
               </div>
-              <img
-                src="https://images.unsplash.com/photo-1549078642-b2ba4bda0cdb?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144"
-                alt="My profile"
-                className="w-6 h-6 rounded-full order-1"
-              />
-            </div>
-          </div>
-          <div className="chat-message">
-            <div className="flex items-end justify-end">
-              <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
-                <div>
-                  <span className="px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white ">
-                    Your error message says permission denied, npm global
-                    installs must be given root privileges.
-                  </span>
-                </div>
-              </div>
-              <img
-                src="https://images.unsplash.com/photo-1590031905470-a1a1feacbb0b?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144"
-                alt="My profile"
-                className="w-6 h-6 rounded-full order-2"
-              />
             </div>
           </div>
         </div>
@@ -124,26 +98,7 @@ export function Chatroom({ room }) {
             />
             <div class="absolute right-0 items-center inset-y-0 hidden sm:flex">
               <button
-                type="button"
-                className="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  className="h-6 w-6 text-gray-600"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  ></path>
-                </svg>
-              </button>
-              <button
-                type="button"
+                type="submit"
                 className="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none"
               >
                 <span class="font-bold">Send</span>
@@ -160,11 +115,6 @@ export function Chatroom({ room }) {
           </div>
         </div>
       </form>
-
-      <script>
-        const el = document.getElementById('messages') el.scrollTop =
-        el.scrollHeight
-      </script>
     </div>
   );
 }

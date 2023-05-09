@@ -73,7 +73,7 @@ export function Chatroom({ room, signUserOut }) {
           className="bg-gray-400 flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
         >
           <div className="chat-message">
-            <div className="flex items-end">
+            <div className="flex itemmds-end">
               <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
                 {messages.map((message) => (
                   <span className="px-6 py-4 rounded-lg text-sm inline-block rounded-bl-none bg-gray-300 text-black">
